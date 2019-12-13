@@ -11,5 +11,5 @@ if __name__ == "__main__":
     pdt = ProductDao()
     pdt.insert_product()
     # pdt.delete_product()
-    # pdt.select()
+    # res = pdt.select()
     # pdt.update_product()

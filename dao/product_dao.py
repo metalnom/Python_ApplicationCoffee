@@ -56,10 +56,12 @@ class ProductDao():
             conn = ConnectionPool.get_instance().get_connection()
             cursor = conn.cursor()
             cursor.execute(sql)
-            for row in self.__iter_row(cursor, 5):
-                print(type(row), " ", row)
+            data = []
+            [data.append(row) for row in self.__iter_row(cursor, 5)]
+            return data
         except Error as e:
             print(e)
+            raise e
         finally:
             cursor.close()
             conn.close()
