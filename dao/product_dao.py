@@ -39,9 +39,10 @@ class ProductDao():
         except Error as e:
             return False
 
-    def insert_product(self, sql, code, name):
+    def insert_product(self, code, name):
+        insert_sql = "insert into product values(%s, %s)"
         args = (code, name)
-        self.__do_query(query=sql, arg=args)
+        self.__do_query(query=insert_sql, arg=args)
 
     def __iter_row(self, cursor, size=5):
         while True:
