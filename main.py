@@ -1,15 +1,11 @@
 from dao.product_dao import ProductDao
-from db_connection.db_connection import ConnectionPool
+from dao.sale_dao import SaleDao
 
 
 if __name__ == "__main__":
-    pool = ConnectionPool.get_instance()
-    connection = pool.get_connection()
 
-    print(pool, connection)
+    Pdao = ProductDao()
+    Pdao.select_item()
 
-    pdt = ProductDao()
-    pdt.insert_product()
-    # pdt.delete_product()
-    # res = pdt.select()
-    # pdt.update_product()
+    Sdao = SaleDao()
+    Sdao.select_item()

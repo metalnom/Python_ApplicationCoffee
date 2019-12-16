@@ -2,47 +2,47 @@ import inspect
 from mysql.connector import Error
 from dao.abs_dao import Dao
 
-insert_sql = "insert into product values(null, %s, %s)"
-update_sql = "update product set code=%s, name=%s where code=%s"
-delete_sql = "delete from product where code=%s"
-select_sql = "select code, name from product"
-select_sql_where = select_sql + " where code=%s"
+insert_sql = "insert into sale values(null, %s, %s, %s, %s)"
+update_sql = "update sale set code=%s, price=%s, saleCnt=%s, marginRate=%s where no=%s"
+delete_sql = "delete from sale where no=%s"
+select_sql = "select no, code, price, saleCnt, marginRate from sale"
+select_sql_where = select_sql + " where no=%s"
 
 
-class ProductDao(Dao):
-    def insert_item(self, code=None, name=None):
+class SaleDao(Dao):
+    def insert_item(self, code=None, price=None, saleCnt=None, marginRate=None):
         print("\n_____ {}() _____".format(inspect.stack()[0][3]))
-        args = (code, name)
+        args = (code, price, saleCnt, marginRate)
         try:
             super().do_query(query=insert_sql, kargs=args)
             return True
         except Error:
             return False
 
-    def update_item(self, code=None, name=None):
+    def update_item(self, code=None, price=None, saleCnt=None, marginRate=None, no=None):
         print("\n_____ {}() _____".format(inspect.stack()[0][3]))
-        args = (code, name)
+        args = (code, price, saleCnt, marginRate, no)
         try:
             super().do_query(query=update_sql, kargs=args)
             return True
         except Error:
             return False
 
-    def delete_item(self, code=None):
+    def delete_item(self, no=None):
         print("\n_____ {}() _____".format(inspect.stack()[0][3]))
-        args = (code, )
+        args = (no, )
         try:
             super().do_query(query=delete_sql, kargs=args)
             return True
         except Error:
             return False
 
-    def select_item(self, code=None):
+    def select_item(self, no=None):
         print("\n_____ {}() _____".format(inspect.stack()[0][3]))
         try:
             conn = self.connection_pool.get_connection()
             cursor = conn.cursor()
-            cursor.execute(select_sql) if code is None else cursor.execute(select_sql_where, (code, ))
+            cursor.execute(select_sql) if no is None else cursor.execute(select_sql_where, (no, ))
             res = []
             [res.append(row) for row in self.iter_row(cursor, 5)]
             print(res)
