@@ -29,8 +29,8 @@ class Dao(metaclass=ABCMeta):
         try:
             conn = self.connection_pool.get_connection()
             cursor = conn.cursor()
-            if kwargs['p_args'] is not None:
-                cursor.execute(kwargs['query'], kwargs['kwargs'])
+            if kwargs['kargs'] is not None:
+                cursor.execute(kwargs['query'], kwargs['kargs'])
             else:
                 cursor.execute(kwargs['query'])
             conn.commit()

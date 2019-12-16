@@ -22,6 +22,7 @@ class SaleDao(Dao):
     def update_item(self, code=None, price=None, saleCnt=None, marginRate=None, no=None):
         print("\n_____ {}() _____".format(inspect.stack()[0][3]))
         args = (code, price, saleCnt, marginRate, no)
+        print(args)
         try:
             super().do_query(query=update_sql, kargs=args)
             return True

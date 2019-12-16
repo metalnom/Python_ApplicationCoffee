@@ -32,9 +32,7 @@ class ProductUI(QWidget):
         self.ui.btn_init.clicked.connect(self.init_item)
         # 마우스 우클릭시 메뉴
         self.set_context_menu(self.ui.tableWidget)
-
-        ProductDao.select_item()
-        self.load_data(res)
+        self.load_data(data)
 
     def load_data(self, data):
         for idx, (code, name) in enumerate(data):
@@ -70,6 +68,7 @@ class ProductUI(QWidget):
         self.table.insertRow(currentIdx)
         self.table.setItem(currentIdx, 0, item_code)
         self.table.setItem(currentIdx, 1, item_name)
+
         self.ui.le_code.clear()
         self.ui.le_name.clear()
         QMessageBox.information(self, "", "추가 완료", QMessageBox.Ok)
@@ -98,6 +97,7 @@ class ProductUI(QWidget):
         item_code, item_name = self.get_item_from_le()
         self.table.setItem(currentIdx.row(), 0, item_code)
         self.table.setItem(currentIdx.row(), 1, item_name)
+        # pdao.update_item(code=item_code, name=item_name)
         self.ui.le_code.clear()
         self.ui.le_name.clear()
         self.ui.btn_update.hide()
