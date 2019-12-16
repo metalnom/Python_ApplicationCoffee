@@ -45,7 +45,6 @@ class ProductDao(Dao):
             cursor.execute(select_sql) if code is None else cursor.execute(select_sql_where, (code, ))
             res = []
             [res.append(row) for row in self.iter_row(cursor, 5)]
-            print(res)
             return res
         except Error as e:
             print(e)
