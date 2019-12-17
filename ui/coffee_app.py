@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QHeaderView, QWidget, QAction, QMessageBox, QTableWidgetItem
 from dao.product_dao import ProductDao
 from dao.sale_dao import SaleDao
+from dao.sale_detail_dao import SaleDetailDao
 
 
 def create_table(table=None, data=None):
@@ -23,12 +24,15 @@ class CoffeeUI(QWidget):
 
         self.Product = ProductDao()
         self.Sale = SaleDao()
+        self.SaleDetail = SaleDetailDao()
 
         self.table_p = create_table(table=self.ui.tbl_p, data=["code", "name"])
         self.table_s = create_table(table=self.ui.tbl_s, data=["no", "code", "price", "saleCnt", "marginRate"])
+        self.table_sd = create_table(table=self.ui.tbl_sd, data=["no", "sale_price", "addTax", "supply_price", "margin_price"])
 
         self.load_data_p(self.Product.select_item())
         self.load_data_s(self.Sale.select_item())
+        self.load_data_sd(self.SaleDetail.select_item())
 
         self.ui.btn_p_add.clicked.connect(self.add_item_p)
         self.ui.btn_p_del.clicked.connect(self.del_item_p)
@@ -47,12 +51,16 @@ class CoffeeUI(QWidget):
 
         self.ui.menu_p.triggered.connect(self.open_pg_p)
         self.ui.menu_s.triggered.connect(self.open_pg_s)
+        self.ui.menu_sd.triggered.connect(self.open_pg_sd)
 
     def open_pg_p(self):
         self.ui.stack_pg.setCurrentIndex(0)
 
     def open_pg_s(self):
         self.ui.stack_pg.setCurrentIndex(1)
+
+    def open_pg_sd(self):
+        self.ui.stack_pg.setCurrentIndex(2)
 
     def load_data_p(self, data):
         self.table_p.setRowCount(0)
@@ -219,3 +227,34 @@ class CoffeeUI(QWidget):
         self.ui.le_s_price.clear()
         self.ui.le_s_saleCnt.clear()
         self.ui.le_s_marginRate.clear()
+
+    def load_data_sd(self, data):
+        self.table_sd.setRowCount(0)
+        for idx, (no, sale_price, addTax, supply_price, margin_price) in enumerate(data):
+            item_no, item_sale_price, item_addTax, item_supply_price, item_margin_price = \
+                self.create_item_sd(no, sale_price, addTax, supply_price, margin_price)
+            nextIdx = self.ui.tbl_sd.rowCount()
+            self.table_sd.insertRow(nextIdx)
+            self.table_sd.setItem(nextIdx, 0, item_no)
+            self.table_sd.setItem(nextIdx, 1, item_sale_price)
+            self.table_sd.setItem(nextIdx, 2, item_addTax)
+            self.table_sd.setItem(nextIdx, 3, item_supply_price)
+            self.table_sd.setItem(nextIdx, 4, item_margin_price)
+
+    def create_item_sd(self, no, sale_price, addTax, supply_price, margin_price):
+        item_no = QTableWidgetItem()
+        item_no.setTextAlignment(Qt.AlignCenter)
+        item_no.setData(Qt.DisplayRole, no)
+        item_sale_price = QTableWidgetItem()
+        item_sale_price.setTextAlignment(Qt.AlignCenter)
+        item_sale_price.setData(Qt.DisplayRole, sale_price)
+        item_addTax = QTableWidgetItem()
+        item_addTax.setTextAlignment(Qt.AlignCenter)
+        item_addTax.setData(Qt.DisplayRole, addTax)
+        item_supply_price = QTableWidgetItem()
+        item_supply_price.setTextAlignment(Qt.AlignCenter)
+        item_supply_price.setData(Qt.DisplayRole, supply_price)
+        item_margin_price = QTableWidgetItem()
+        item_margin_price.setTextAlignment(Qt.AlignCenter)
+        item_margin_price.setData(Qt.DisplayRole, margin_price)
+        return item_no, item_sale_price, item_addTax, item_supply_price, item_margin_price
