@@ -25,7 +25,7 @@ class Dao(metaclass=ABCMeta):
         raise NotImplementedError("Subclass must implement abstract method")
 
     def do_query(self, **kwargs):
-        print("\n______ {}() _____".format(inspect.stack()[0][3]))
+        # print("\n______ {}() _____".format(inspect.stack()[0][3]))
         try:
             conn = self.connection_pool.get_connection()
             cursor = conn.cursor()

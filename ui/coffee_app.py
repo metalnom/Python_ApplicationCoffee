@@ -21,16 +21,14 @@ class CoffeeUI(QWidget):
         self.ui = uic.loadUi("ui/coffee_app.ui")
         self.ui.show()
 
-        Product = ProductDao()
-        Sale = SaleDao()
+        self.Product = ProductDao()
+        self.Sale = SaleDao()
 
         self.table_p = create_table(table=self.ui.tbl_p, data=["code", "name"])
         self.table_s = create_table(table=self.ui.tbl_s, data=["no", "code", "price", "saleCnt", "marginRate"])
 
-        p_res = Product.select_item()
-        self.load_data_p(p_res)
-        s_res = Sale.select_item()
-        self.load_data_s(s_res)
+        self.load_data_p(self.Product.select_item())
+        self.load_data_s(self.Sale.select_item())
 
         self.ui.btn_p_add.clicked.connect(self.add_item_p)
         self.ui.btn_p_del.clicked.connect(self.del_item_p)
@@ -57,6 +55,7 @@ class CoffeeUI(QWidget):
         self.ui.stack_pg.setCurrentIndex(1)
 
     def load_data_p(self, data):
+        self.table_p.setRowCount(0)
         for idx, (code, name) in enumerate(data):
             item_code, item_name = self.create_item_p(code, name)
             nextIdx = self.ui.tbl_p.rowCount()
@@ -86,17 +85,15 @@ class CoffeeUI(QWidget):
 
     def add_item_p(self):
         item_code, item_name = self.get_item_from_le_p()
-        currentIdx = self.ui.tbl_p.rowCount()
-        self.table_p.insertRow(currentIdx)
-        self.table_p.setItem(currentIdx, 0, item_code)
-        self.table_p.setItem(currentIdx, 1, item_name)
+        self.Product.insert_item(item_code, item_name)
+        self.load_data_p(self.Product.select_item())
         self.init_item_p()
         QMessageBox.information(self, "", "추가 완료", QMessageBox.Ok)
 
     def get_item_from_le_p(self):
         code = self.ui.le_p_code.text()
         name = self.ui.le_p_name.text()
-        return self.create_item_p(code, name)
+        return code, name
 
     def create_item_p(self, code, name):
         item_code = QTableWidgetItem()
@@ -109,14 +106,17 @@ class CoffeeUI(QWidget):
 
     def del_item_p(self):
         currentIdx = self.ui.tbl_p.selectedIndexes()[0]
-        self.ui.tbl_p.removeRow(currentIdx.row())
+        code = self.ui.tbl_p.item(currentIdx.row(), 0).text()
+        self.Product.delete_item(code)
+        self.load_data_p(self.Product.select_item())
         QMessageBox.information(self, "", "삭제 완료", QMessageBox.Ok)
 
     def update_item_p(self):
         currentIdx = self.ui.tbl_p.selectedIndexes()[0]
         item_code, item_name = self.get_item_from_le_p()
-        self.table_p.setItem(currentIdx.row(), 0, item_code)
-        self.table_p.setItem(currentIdx.row(), 1, item_name)
+        code = self.ui.tbl_p.item(currentIdx.row(), 0).text()
+        self.Product.update_item(item_code, item_name)
+        self.load_data_p(self.Product.select_item())
         self.init_item_p()
         self.ui.btn_p_update.hide()
         QMessageBox.information(self, "", "수정 완료", QMessageBox.Ok)
@@ -126,6 +126,7 @@ class CoffeeUI(QWidget):
         self.ui.le_p_name.clear()
 
     def load_data_s(self, data):
+        self.table_s.setRowCount(0)
         for idx, (no, code, price, saleCnt, marginRate) in enumerate(data):
             item_no, item_code, item_price, item_saleCnt, item_marginRate = self.create_item_s(no, code, price, saleCnt, marginRate)
             nextIdx = self.ui.tbl_s.rowCount()
@@ -164,13 +165,8 @@ class CoffeeUI(QWidget):
 
     def add_item_s(self):
         item_no, item_code, item_price, item_saleCnt, item_marginRate = self.get_item_from_le_s()
-        currentIdx = self.ui.tbl_s.rowCount()
-        self.table_s.insertRow(currentIdx)
-        self.table_setItem(currentIdx, 0, item_no)
-        self.table_setItem(currentIdx, 1, item_code)
-        self.table_s.setItem(currentIdx, 2, item_price)
-        self.table_s.setItem(currentIdx, 3, item_saleCnt)
-        self.table_s.setItem(currentIdx, 4, item_marginRate)
+        self.Sale.insert_item(item_code, item_price, item_saleCnt, item_marginRate)
+        self.load_data_s(self.Sale.select_item())
         self.init_item_s()
         QMessageBox.information(self, "", "추가 완료", QMessageBox.Ok)
 
@@ -180,7 +176,7 @@ class CoffeeUI(QWidget):
         price = self.ui.le_s_price.text()
         saleCnt = self.ui.le_s_saleCnt.text()
         marginRate = self.ui.le_s_marginRate.text()
-        return self.create_item_s(no, code, price, saleCnt, marginRate)
+        return no, code, price, saleCnt, marginRate
 
     def create_item_s(self, no, code, price, saleCnt, marginRate):
         item_no = QTableWidgetItem()
@@ -202,17 +198,17 @@ class CoffeeUI(QWidget):
 
     def del_item_s(self):
         currentIdx = self.ui.tbl_s.selectedIndexes()[0]
-        self.ui.tbl_s.removeRow(currentIdx.row())
+        no = self.ui.tbl_s.item(currentIdx.row(), 0).text()
+        self.Sale.delete_item(no)
+        self.load_data_s(self.Sale.select_item())
         QMessageBox.information(self, "", "삭제 완료", QMessageBox.Ok)
 
     def update_item_s(self):
         currentIdx = self.ui.tbl_s.selectedIndexes()[0]
         item_no, item_code, item_price, item_saleCnt, item_marginRate = self.get_item_from_le_s()
-        self.table_s.setItem(currentIdx.row(), 0, item_no)
-        self.table_s.setItem(currentIdx.row(), 1, item_code)
-        self.table_s.setItem(currentIdx.row(), 2, item_price)
-        self.table_s.setItem(currentIdx.row(), 3, item_saleCnt)
-        self.table_s.setItem(currentIdx.row(), 4, item_marginRate)
+        no = self.ui.tbl_s.item(currentIdx.row(), 0).text()
+        self.Sale.update_item(item_code, item_price, item_saleCnt, item_marginRate, no)
+        self.load_data_s(self.Sale.select_item())
         self.init_item_s()
         self.ui.btn_s_update.hide()
         QMessageBox.information(self, "", "수정 완료", QMessageBox.Ok)

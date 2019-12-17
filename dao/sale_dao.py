@@ -11,7 +11,7 @@ select_sql_where = select_sql + " where no=%s"
 
 class SaleDao(Dao):
     def insert_item(self, code=None, price=None, saleCnt=None, marginRate=None):
-        print("\n_____ {}() _____".format(inspect.stack()[0][3]))
+        # print("\n_____ {}() _____".format(inspect.stack()[0][3]))
         args = (code, price, saleCnt, marginRate)
         try:
             super().do_query(query=insert_sql, kargs=args)
@@ -20,7 +20,7 @@ class SaleDao(Dao):
             return False
 
     def update_item(self, code=None, price=None, saleCnt=None, marginRate=None, no=None):
-        print("\n_____ {}() _____".format(inspect.stack()[0][3]))
+        # print("\n_____ {}() _____".format(inspect.stack()[0][3]))
         args = (code, price, saleCnt, marginRate, no)
         print(args)
         try:
@@ -30,7 +30,7 @@ class SaleDao(Dao):
             return False
 
     def delete_item(self, no=None):
-        print("\n_____ {}() _____".format(inspect.stack()[0][3]))
+        # print("\n_____ {}() _____".format(inspect.stack()[0][3]))
         args = (no, )
         try:
             super().do_query(query=delete_sql, kargs=args)
@@ -39,14 +39,13 @@ class SaleDao(Dao):
             return False
 
     def select_item(self, no=None):
-        print("\n_____ {}() _____".format(inspect.stack()[0][3]))
+        # print("\n_____ {}() _____".format(inspect.stack()[0][3]))
         try:
             conn = self.connection_pool.get_connection()
             cursor = conn.cursor()
             cursor.execute(select_sql) if no is None else cursor.execute(select_sql_where, (no, ))
             res = []
             [res.append(row) for row in self.iter_row(cursor, 5)]
-            print(res)
             return res
         except Error as e:
             print(e)
