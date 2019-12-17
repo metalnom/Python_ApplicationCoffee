@@ -26,13 +26,12 @@ class ProductUI(QWidget):
 
         self.table = create_table(table=self.ui.tableWidget, data=["code", "name"])
 
-        # slot/signal
         self.ui.btn_add.clicked.connect(self.add_item)
         self.ui.btn_del.clicked.connect(self.del_item)
         self.ui.btn_update.clicked.connect(self.update_item)
         self.ui.btn_update.hide()
         self.ui.btn_init.clicked.connect(self.init_item)
-        # 마우스 우클릭시 메뉴
+
         self.set_context_menu(self.ui.tableWidget)
 
     def load_data(self, data):
