@@ -1,6 +1,8 @@
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QAbstractItemView, QHeaderView, QWidget, QAction, QMessageBox, QTableWidgetItem
+from dao.product_dao import ProductDao
+from dao.sale_dao import SaleDao
 
 
 def create_table(table=None, data=None):
@@ -15,11 +17,20 @@ class CoffeeUI(QWidget):
 
     def __init__(self):
         super().__init__()
+
         self.ui = uic.loadUi("ui/coffee_app.ui")
         self.ui.show()
 
+        Product = ProductDao()
+        Sale = SaleDao()
+
         self.table_p = create_table(table=self.ui.tbl_p, data=["code", "name"])
         self.table_s = create_table(table=self.ui.tbl_s, data=["no", "code", "price", "saleCnt", "marginRate"])
+
+        p_res = Product.select_item()
+        self.load_data_p(p_res)
+        s_res = Sale.select_item()
+        self.load_data_s(s_res)
 
         self.ui.btn_p_add.clicked.connect(self.add_item_p)
         self.ui.btn_p_del.clicked.connect(self.del_item_p)
