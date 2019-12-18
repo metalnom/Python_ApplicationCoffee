@@ -46,6 +46,10 @@ class CoffeeUI(QWidget):
         self.ui.btn_s_update.hide()
         self.ui.btn_s_init.clicked.connect(self.init_item_s)
 
+        self.ui.btn_sd_no.clicked.connect(self.orderby_default)
+        self.ui.btn_sd_sp.clicked.connect(self.orderby_saleprice)
+        self.ui.btn_sd_mp.clicked.connect(self.orderby_marginprice)
+
         self.set_context_menu_p(self.ui.tbl_p)
         self.set_context_menu_s(self.ui.tbl_s)
 
@@ -158,9 +162,9 @@ class CoffeeUI(QWidget):
         currentIdx = self.ui.tbl_s.selectedIndexes()[0]
         no = self.ui.tbl_s.item(currentIdx.row(), 0).text()
         code = self.ui.tbl_s.item(currentIdx.row(), 1).text()
-        price = self.ui.tbl_s.item(currentIdx.row(), 2).text()
-        saleCnt = self.ui.tbl_s.item(currentIdx.row(), 3).text()
-        marginRate = self.ui.tbl_s.item(currentIdx.row(), 4).text()
+        price = self.ui.tbl_s.item(currentIdx.row(), 2).text().replace(',', '')
+        saleCnt = self.ui.tbl_s.item(currentIdx.row(), 3).text().replace(',', '')
+        marginRate = self.ui.tbl_s.item(currentIdx.row(), 4).text().strip('%')
         self.ui.le_s_no.setText(no)
         self.ui.le_s_code.setText(code)
         self.ui.le_s_price.setText(price)
@@ -196,12 +200,15 @@ class CoffeeUI(QWidget):
         item_price = QTableWidgetItem()
         item_price.setTextAlignment(Qt.AlignCenter)
         item_price.setData(Qt.DisplayRole, price)
+        item_price.setData(Qt.DisplayRole, format(price, ',d'))
         item_saleCnt = QTableWidgetItem()
         item_saleCnt.setTextAlignment(Qt.AlignCenter)
         item_saleCnt.setData(Qt.DisplayRole, saleCnt)
+        item_saleCnt.setData(Qt.DisplayRole, format(saleCnt, ',d'))
         item_marginRate = QTableWidgetItem()
         item_marginRate.setTextAlignment(Qt.AlignCenter)
         item_marginRate.setData(Qt.DisplayRole, marginRate)
+        item_marginRate.setData(Qt.DisplayRole, str(marginRate) + '%')
         return item_no, item_code, item_price, item_saleCnt, item_marginRate
 
     def del_item_s(self):
@@ -248,13 +255,26 @@ class CoffeeUI(QWidget):
         item_sale_price = QTableWidgetItem()
         item_sale_price.setTextAlignment(Qt.AlignCenter)
         item_sale_price.setData(Qt.DisplayRole, sale_price)
+        item_sale_price.setData(Qt.DisplayRole, format(sale_price, ',d'))
         item_addTax = QTableWidgetItem()
         item_addTax.setTextAlignment(Qt.AlignCenter)
         item_addTax.setData(Qt.DisplayRole, addTax)
+        item_addTax.setData(Qt.DisplayRole, format(addTax, ',d'))
         item_supply_price = QTableWidgetItem()
         item_supply_price.setTextAlignment(Qt.AlignCenter)
         item_supply_price.setData(Qt.DisplayRole, supply_price)
+        item_supply_price.setData(Qt.DisplayRole, format(supply_price, ',d'))
         item_margin_price = QTableWidgetItem()
         item_margin_price.setTextAlignment(Qt.AlignCenter)
         item_margin_price.setData(Qt.DisplayRole, margin_price)
+        item_margin_price.setData(Qt.DisplayRole, format(margin_price, ',d'))
         return item_no, item_sale_price, item_addTax, item_supply_price, item_margin_price
+
+    def orderby_default(self):
+        self.load_data_sd(self.SaleDetail.select_item())
+
+    def orderby_saleprice(self):
+        self.load_data_sd(self.SaleDetail.orderby_sprice())
+
+    def orderby_marginprice(self):
+        self.load_data_sd(self.SaleDetail.orderby_mprice())

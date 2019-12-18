@@ -48,3 +48,11 @@ class Dao(metaclass=ABCMeta):
                 break
             for row in rows:
                 yield row
+
+    def iter_row_order(self, cursor):
+        for result in cursor.stored_results():
+            rows = result.fetchall()
+            if not rows:
+                break
+            for row in rows:
+                yield row
