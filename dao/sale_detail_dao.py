@@ -1,4 +1,3 @@
-import inspect
 from mysql.connector import Error
 from dao.abs_dao import Dao
 

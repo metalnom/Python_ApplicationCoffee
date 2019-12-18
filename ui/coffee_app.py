@@ -160,12 +160,10 @@ class CoffeeUI(QWidget):
 
     def __update_s(self):
         currentIdx = self.ui.tbl_s.selectedIndexes()[0]
-        no = self.ui.tbl_s.item(currentIdx.row(), 0).text()
         code = self.ui.tbl_s.item(currentIdx.row(), 1).text()
         price = self.ui.tbl_s.item(currentIdx.row(), 2).text().replace(',', '')
         saleCnt = self.ui.tbl_s.item(currentIdx.row(), 3).text().replace(',', '')
         marginRate = self.ui.tbl_s.item(currentIdx.row(), 4).text().strip('%')
-        self.ui.le_s_no.setText(no)
         self.ui.le_s_code.setText(code)
         self.ui.le_s_price.setText(price)
         self.ui.le_s_saleCnt.setText(saleCnt)
@@ -176,19 +174,18 @@ class CoffeeUI(QWidget):
         self.del_item_s()
 
     def add_item_s(self):
-        item_no, item_code, item_price, item_saleCnt, item_marginRate = self.get_item_from_le_s()
+        item_code, item_price, item_saleCnt, item_marginRate = self.get_item_from_le_s()
         self.Sale.insert_item(item_code, item_price, item_saleCnt, item_marginRate)
         self.load_data_s(self.Sale.select_item())
         self.init_item_s()
         QMessageBox.information(self, "", "추가 완료", QMessageBox.Ok)
 
     def get_item_from_le_s(self):
-        no = self.ui.le_s_no.text()
         code = self.ui.le_s_code.text()
         price = self.ui.le_s_price.text()
         saleCnt = self.ui.le_s_saleCnt.text()
         marginRate = self.ui.le_s_marginRate.text()
-        return no, code, price, saleCnt, marginRate
+        return code, price, saleCnt, marginRate
 
     def create_item_s(self, no, code, price, saleCnt, marginRate):
         item_no = QTableWidgetItem()
@@ -198,15 +195,15 @@ class CoffeeUI(QWidget):
         item_code.setTextAlignment(Qt.AlignCenter)
         item_code.setData(Qt.DisplayRole, code)
         item_price = QTableWidgetItem()
-        item_price.setTextAlignment(Qt.AlignCenter)
+        item_price.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_price.setData(Qt.DisplayRole, price)
         item_price.setData(Qt.DisplayRole, format(price, ',d'))
         item_saleCnt = QTableWidgetItem()
-        item_saleCnt.setTextAlignment(Qt.AlignCenter)
+        item_saleCnt.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_saleCnt.setData(Qt.DisplayRole, saleCnt)
         item_saleCnt.setData(Qt.DisplayRole, format(saleCnt, ',d'))
         item_marginRate = QTableWidgetItem()
-        item_marginRate.setTextAlignment(Qt.AlignCenter)
+        item_marginRate.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_marginRate.setData(Qt.DisplayRole, marginRate)
         item_marginRate.setData(Qt.DisplayRole, str(marginRate) + '%')
         return item_no, item_code, item_price, item_saleCnt, item_marginRate
@@ -220,7 +217,7 @@ class CoffeeUI(QWidget):
 
     def update_item_s(self):
         currentIdx = self.ui.tbl_s.selectedIndexes()[0]
-        item_no, item_code, item_price, item_saleCnt, item_marginRate = self.get_item_from_le_s()
+        item_code, item_price, item_saleCnt, item_marginRate = self.get_item_from_le_s()
         no = self.ui.tbl_s.item(currentIdx.row(), 0).text()
         self.Sale.update_item(item_code, item_price, item_saleCnt, item_marginRate, no)
         self.load_data_s(self.Sale.select_item())
@@ -229,7 +226,6 @@ class CoffeeUI(QWidget):
         QMessageBox.information(self, "", "수정 완료", QMessageBox.Ok)
 
     def init_item_s(self):
-        self.ui.le_s_no.clear()
         self.ui.le_s_code.clear()
         self.ui.le_s_price.clear()
         self.ui.le_s_saleCnt.clear()
@@ -253,19 +249,19 @@ class CoffeeUI(QWidget):
         item_no.setTextAlignment(Qt.AlignCenter)
         item_no.setData(Qt.DisplayRole, no)
         item_sale_price = QTableWidgetItem()
-        item_sale_price.setTextAlignment(Qt.AlignCenter)
+        item_sale_price.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_sale_price.setData(Qt.DisplayRole, sale_price)
         item_sale_price.setData(Qt.DisplayRole, format(sale_price, ',d'))
         item_addTax = QTableWidgetItem()
-        item_addTax.setTextAlignment(Qt.AlignCenter)
+        item_addTax.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_addTax.setData(Qt.DisplayRole, addTax)
         item_addTax.setData(Qt.DisplayRole, format(addTax, ',d'))
         item_supply_price = QTableWidgetItem()
-        item_supply_price.setTextAlignment(Qt.AlignCenter)
+        item_supply_price.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_supply_price.setData(Qt.DisplayRole, supply_price)
         item_supply_price.setData(Qt.DisplayRole, format(supply_price, ',d'))
         item_margin_price = QTableWidgetItem()
-        item_margin_price.setTextAlignment(Qt.AlignCenter)
+        item_margin_price.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_margin_price.setData(Qt.DisplayRole, margin_price)
         item_margin_price.setData(Qt.DisplayRole, format(margin_price, ',d'))
         return item_no, item_sale_price, item_addTax, item_supply_price, item_margin_price

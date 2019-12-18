@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stack_pg">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="pg_product">
        <layout class="QGridLayout" name="gridLayout">
@@ -561,13 +561,6 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_2">
               <item>
-               <widget class="QLabel" name="lbl_s_no">
-                <property name="text">
-                 <string>no</string>
-                </property>
-               </widget>
-              </item>
-              <item>
                <widget class="QLabel" name="lbl_s_code">
                 <property name="text">
                  <string>code</string>
@@ -599,9 +592,6 @@
             </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_3">
-              <item>
-               <widget class="QLineEdit" name="le_s_no"/>
-              </item>
               <item>
                <widget class="QLineEdit" name="le_s_code"/>
               </item>
