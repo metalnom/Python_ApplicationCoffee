@@ -1,7 +1,8 @@
 from mysql.connector import Error
 from dao.abs_dao import Dao
 
-select_sql = "select no, sale_price, addTax, supply_price, margin_price from sale_detail"
+select_sql = "select sale.no, sale.code code, p.name name, price, saleCnt, sale_price, addTax, supply_price, marginRate, margin_price " \
+             "from sale inner join sale_detail sd on sale.no = sd.no join product p on sale.code = p.code"
 orderby_sale_price = "proc_saledetail_orderby_saleprice"
 orderby_margin_price = "proc_saledetail_orderby_marginprice"
 

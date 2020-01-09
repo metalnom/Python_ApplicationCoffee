@@ -1,0 +1,25 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `coffee`.`proc_saledetail_orderby_saleprice`()
+BEGIN
+select s3.rank, s3.code, s3.name, s3.price, s3.saleCnt, s3.sale_price, s3.addTax, s3.supply_price, s3.marginRate, s3.margin_price
+  from (select (select count(*)+1 from sale_detail s2 where s2.sale_price > s1.sale_price) rank, sale.code code, p.name name, price, saleCnt, sale_price, addTax, supply_price, marginRate, margin_price
+  from sale inner join sale_detail s1 on sale.no = s1.no join product p on sale.code = p.code
+ order by rank) s3
+UNION
+select '합계', null, null, sum(s4.price), sum(s4.saleCnt), sum(s4.sale_price), sum(s4.addTax), sum(s4.supply_price), null, sum(s4.margin_price)
+  from (select price, saleCnt, sale_price, addTax, supply_price, margin_price
+  from sale inner join sale_detail s1 on sale.no = s1.no join product p on sale.code = p.code) s4;
+END
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `coffee`.`proc_saledetail_orderby_marginprice`()
+BEGIN
+select s3.rank, s3.code, s3.name, s3.price, s3.saleCnt, s3.sale_price, s3.addTax, s3.supply_price, s3.marginRate, s3.margin_price
+  from (select (select count(*)+1 from sale_detail s2 where s2.margin_price > s1.margin_price) rank, sale.code code, p.name name, price, saleCnt, sale_price, addTax, supply_price, marginRate, margin_price
+  from sale inner join sale_detail s1 on sale.no = s1.no join product p on sale.code = p.code
+ order by rank) s3
+UNION
+select '합계', null, null, sum(s4.price), sum(s4.saleCnt), sum(s4.sale_price), sum(s4.addTax), sum(s4.supply_price), null, sum(s4.margin_price)
+  from (select price, saleCnt, sale_price, addTax, supply_price, margin_price
+  from sale inner join sale_detail s1 on sale.no = s1.no join product p on sale.code = p.code) s4;
+END

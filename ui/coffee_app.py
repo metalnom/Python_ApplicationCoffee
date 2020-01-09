@@ -28,7 +28,7 @@ class CoffeeUI(QWidget):
 
         self.table_p = create_table(table=self.ui.tbl_p, data=["code", "name"])
         self.table_s = create_table(table=self.ui.tbl_s, data=["no", "code", "price", "saleCnt", "marginRate"])
-        self.table_sd = create_table(table=self.ui.tbl_sd, data=["no", "sale_price", "addTax", "supply_price", "margin_price"])
+        self.table_sd = create_table(table=self.ui.tbl_sd, data=["rank", "code", "name", "price", "saleCnt", "sale_price", "addTax", "supply_price", "marginRate", "margin_price"])
 
         self.load_data_p(self.Product.select_item())
         self.load_data_s(self.Sale.select_item())
@@ -233,38 +233,62 @@ class CoffeeUI(QWidget):
 
     def load_data_sd(self, data):
         self.table_sd.setRowCount(0)
-        for idx, (no, sale_price, addTax, supply_price, margin_price) in enumerate(data):
-            item_no, item_sale_price, item_addTax, item_supply_price, item_margin_price = \
-                self.create_item_sd(no, sale_price, addTax, supply_price, margin_price)
+        for idx, (rank, code, name, price, saleCnt, sale_price, addTax, supply_price, marginRate, margin_price) in enumerate(data):
+            item_rank, item_code, item_name, item_price, item_saleCnt, item_sale_price, item_addTax, item_supply_price, item_marginRate, item_margin_price = \
+                self.create_item_sd(rank, code, name, price, saleCnt, sale_price, addTax, supply_price, marginRate, margin_price)
             nextIdx = self.ui.tbl_sd.rowCount()
             self.table_sd.insertRow(nextIdx)
-            self.table_sd.setItem(nextIdx, 0, item_no)
-            self.table_sd.setItem(nextIdx, 1, item_sale_price)
-            self.table_sd.setItem(nextIdx, 2, item_addTax)
-            self.table_sd.setItem(nextIdx, 3, item_supply_price)
-            self.table_sd.setItem(nextIdx, 4, item_margin_price)
+            self.table_sd.setItem(nextIdx, 0, item_rank)
+            self.table_sd.setItem(nextIdx, 1, item_code)
+            self.table_sd.setItem(nextIdx, 2, item_name)
+            self.table_sd.setItem(nextIdx, 3, item_price)
+            self.table_sd.setItem(nextIdx, 4, item_saleCnt)
+            self.table_sd.setItem(nextIdx, 5, item_sale_price)
+            self.table_sd.setItem(nextIdx, 6, item_addTax)
+            self.table_sd.setItem(nextIdx, 7, item_supply_price)
+            self.table_sd.setItem(nextIdx, 8, item_marginRate)
+            self.table_sd.setItem(nextIdx, 9, item_margin_price)
 
-    def create_item_sd(self, no, sale_price, addTax, supply_price, margin_price):
-        item_no = QTableWidgetItem()
-        item_no.setTextAlignment(Qt.AlignCenter)
-        item_no.setData(Qt.DisplayRole, no)
+    def create_item_sd(self, rank, code, name, price, saleCnt, sale_price, addTax, supply_price, marginRate, margin_price):
+        item_rank = QTableWidgetItem()
+        item_rank.setTextAlignment(Qt.AlignCenter)
+        item_rank.setData(Qt.DisplayRole, rank)
+        item_name = QTableWidgetItem()
+        item_name.setTextAlignment(Qt.AlignCenter)
+        item_name.setData(Qt.DisplayRole, name)
+        item_code = QTableWidgetItem()
+        item_code.setTextAlignment(Qt.AlignCenter)
+        item_code.setData(Qt.DisplayRole, code)
+        item_price = QTableWidgetItem()
+        item_price.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
+        item_price.setData(Qt.DisplayRole, price)
+        item_price.setData(Qt.DisplayRole, format(int(price), ',d'))
+        item_saleCnt = QTableWidgetItem()
+        item_saleCnt.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
+        item_saleCnt.setData(Qt.DisplayRole, saleCnt)
+        item_saleCnt.setData(Qt.DisplayRole, format(int(saleCnt), ',d'))
         item_sale_price = QTableWidgetItem()
         item_sale_price.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_sale_price.setData(Qt.DisplayRole, sale_price)
-        item_sale_price.setData(Qt.DisplayRole, format(sale_price, ',d'))
+        item_sale_price.setData(Qt.DisplayRole, format(int(sale_price), ',d'))
         item_addTax = QTableWidgetItem()
         item_addTax.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_addTax.setData(Qt.DisplayRole, addTax)
-        item_addTax.setData(Qt.DisplayRole, format(addTax, ',d'))
+        item_addTax.setData(Qt.DisplayRole, format(int(addTax), ',d'))
         item_supply_price = QTableWidgetItem()
         item_supply_price.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_supply_price.setData(Qt.DisplayRole, supply_price)
-        item_supply_price.setData(Qt.DisplayRole, format(supply_price, ',d'))
+        item_supply_price.setData(Qt.DisplayRole, format(int(supply_price), ',d'))
+        item_marginRate = QTableWidgetItem()
+        item_marginRate.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
+        item_marginRate.setData(Qt.DisplayRole, marginRate)
+        if marginRate is not None:
+            item_marginRate.setData(Qt.DisplayRole, str(marginRate) + '%')
         item_margin_price = QTableWidgetItem()
         item_margin_price.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
         item_margin_price.setData(Qt.DisplayRole, margin_price)
-        item_margin_price.setData(Qt.DisplayRole, format(margin_price, ',d'))
-        return item_no, item_sale_price, item_addTax, item_supply_price, item_margin_price
+        item_margin_price.setData(Qt.DisplayRole, format(int(margin_price), ',d'))
+        return item_rank, item_code, item_name, item_price, item_saleCnt, item_sale_price, item_addTax, item_supply_price, item_marginRate, item_margin_price
 
     def orderby_default(self):
         self.load_data_sd(self.SaleDetail.select_item())
